@@ -6,6 +6,7 @@ import Moment from 'moment'
 import { StyleSheet, View, Text, Image, ActivityIndicator, ScrollView, Button } from 'react-native'
 import { getFilmDetailFromApi, getImageFromApi } from '../API/TMDBApi'
 import { connect } from 'react-redux'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 class FilmDetail extends React.Component {
   constructor(props) {
@@ -27,8 +28,8 @@ class FilmDetail extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("componentDidUpdate : ")
-    console.log(this.props.favoritesFilm)
+    //console.log("componentDidUpdate : ")
+    //console.log(this.props.favoritesFilm)
   }
 
   _displayLoading() {
@@ -41,12 +42,26 @@ class FilmDetail extends React.Component {
     }
   }
 
-  _toggleFavorite(){
+  _toggleFavorite() {
     const action = {
       type: "TOGGLE_FAVORITE",
       value: this.state.film
     }
     this.props.dispatch(action)
+  }
+
+  _displayFavoriteImage() {
+    var sourceImage = require('../Images/ic_favorite_border.png')
+    if (this.props.favoritesFilm.findIndex(item => item.id === this.state.film.id) !== -1) {
+      // Film dans nos favoris
+      sourceImage = require('../Images/ic_favorite.png')
+    }
+    return (
+      <Image
+        style={styles.favorite_image}
+        source={sourceImage}
+      />
+    )
   }
 
   _displayFilm() {
@@ -63,7 +78,11 @@ class FilmDetail extends React.Component {
             {this.state.film.title}
           </Text>
 
-          <Button title="Favoris" onPress={() => this._toggleFavorite()}/>
+          <TouchableOpacity
+            style={styles.favorite_container}
+            onPress={() => this._toggleFavorite()}>
+            {this._displayFavoriteImage()}
+          </TouchableOpacity>
 
           <Text style={styles.description_text}>{this.state.film.overview}</Text>
 
@@ -77,13 +96,6 @@ class FilmDetail extends React.Component {
           <Text style={styles.vote_text}>
             Companie(s): {this.state.film.production_companies.map(g => g.name).join(" / ")}
           </Text>
-
-          {/* <View style={styles.image_container}>
-            <Image
-              style={styles.image}
-              source={{ uri: getImageFromApi(this.state.film.backdrop_path) }}
-            />
-          </View> */}
 
           {/* Pour l'instant je n'affiche que le titre, 
           je vous laisserais le soin de créer la vue. 
@@ -107,6 +119,13 @@ class FilmDetail extends React.Component {
 const styles = StyleSheet.create({
   main_container: {
     flex: 1
+  },
+  favorite_container: {
+    alignItems: 'center', // Alignement des components enfants sur l'axe secondaire, X ici
+  },
+  favorite_image: {
+    width: 40,
+    height: 40
   },
   loading_container: {
     position: 'absolute',
