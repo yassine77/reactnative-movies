@@ -7,7 +7,7 @@ import { getImageFromApi } from '../API/TMDBApi'
 class FilmItem extends React.Component {
 
   _displayFavoriteImage(isFilmFavorite) {
-    console.log("isFilmFavorite : " + isFilmFavorite)
+    //console.log("isFilmFavorite : " + isFilmFavorite)
     if (isFilmFavorite) {
       // Film dans nos favoris
       return (
