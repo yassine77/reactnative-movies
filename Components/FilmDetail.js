@@ -3,8 +3,9 @@
 import React from 'react'
 import Numeral from 'numeral'
 import Moment from 'moment'
-import { StyleSheet, View, Text, Image, ActivityIndicator, ScrollView } from 'react-native'
+import { StyleSheet, View, Text, Image, ActivityIndicator, ScrollView, Button } from 'react-native'
 import { getFilmDetailFromApi, getImageFromApi } from '../API/TMDBApi'
+import { connect } from 'react-redux'
 
 class FilmDetail extends React.Component {
   constructor(props) {
@@ -25,6 +26,11 @@ class FilmDetail extends React.Component {
     })
   }
 
+  componentDidUpdate() {
+    console.log("componentDidUpdate : ")
+    console.log(this.props.favoritesFilm)
+  }
+
   _displayLoading() {
     if (this.state.isLoading) {
       return (
@@ -33,6 +39,14 @@ class FilmDetail extends React.Component {
         </View>
       )
     }
+  }
+
+  _toggleFavorite(){
+    const action = {
+      type: "TOGGLE_FAVORITE",
+      value: this.state.film
+    }
+    this.props.dispatch(action)
   }
 
   _displayFilm() {
@@ -48,6 +62,8 @@ class FilmDetail extends React.Component {
           <Text style={styles.title_container}>
             {this.state.film.title}
           </Text>
+
+          <Button title="Favoris" onPress={() => this._toggleFavorite()}/>
 
           <Text style={styles.description_text}>{this.state.film.overview}</Text>
 
@@ -78,6 +94,7 @@ class FilmDetail extends React.Component {
   }
 
   render() {
+    //console.log(this.props)
     return (
       <View style={styles.main_container}>
         {this._displayLoading()}
@@ -135,4 +152,10 @@ const styles = StyleSheet.create({
   },
 })
 
-export default FilmDetail
+const mapStateToProps = (state) => {
+  return {
+    favoritesFilm: state.favoritesFilm
+  }
+}
+
+export default connect(mapStateToProps)(FilmDetail)
