@@ -23,7 +23,7 @@ class FilmItem extends React.Component {
   render() {
     const { film, displayDetailForFilm, isFilmFavorite } = this.props
     return (
-      <View style={styles.main_container}>
+      <View>
         <TouchableOpacity
           style={styles.main_container}
           onPress={() => displayDetailForFilm(film.id)}>
@@ -60,8 +60,7 @@ const styles = StyleSheet.create({
   image: {
     width: 120,
     height: 180,
-    margin: 5,
-    backgroundColor: 'gray'
+    margin: 5
   },
   content_container: {
     flex: 1,
@@ -71,25 +70,22 @@ const styles = StyleSheet.create({
     flex: 3,
     flexDirection: 'row'
   },
-  favorite_container: {
-    flex: 1
-  },
   favorite_image: {
-    width: 20,
-    height: 20
+    width: 25,
+    height: 25,
+    marginRight: 5
   },
   title_text: {
     fontWeight: 'bold',
     fontSize: 20,
-    flex: 4,
+    flex: 6,
     flexWrap: 'wrap',
     paddingRight: 5
   },
   vote_text: {
+    flex: 1,
     fontWeight: 'bold',
     fontSize: 20,
-    flex: 1,
-    textAlign: 'right',
     color: '#666666'
   },
   description_container: {

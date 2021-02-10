@@ -75,8 +75,9 @@ class Search extends React.Component {
         <Button title='Rechercher' onPress={() => this._searchFilms()} />
         <FlatList
           data={this.state.films}
-          keyExtractor={(item) => item.id.toString()}
+          extraData={this.props.favoritesFilm}
 
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) =>
             <FilmItem
               film={item}
