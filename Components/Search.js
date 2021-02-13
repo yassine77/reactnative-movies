@@ -3,6 +3,7 @@
 import React from 'react'
 import { StyleSheet, View, TextInput, Button, Text, FlatList, ActivityIndicator } from 'react-native'
 import FilmItem from './FilmItem'
+import FilmList from './FilmList'
 import { getFilmsFromApiWithSearchedText } from '../API/TMDBApi'
 import { connect } from 'react-redux'
 
@@ -17,9 +18,13 @@ class Search extends React.Component {
       films: [],
       isLoading: false
     }
+
+    // We can bind a function or use the => expression for function definition
+    // I used both here for the example
+    this._loadFilms = this._loadFilms.bind(this);
   }
 
-  _loadFilms() {
+  _loadFilms = () => {
     if (this.searchedText.length > 0) {
       this.setState({ isLoading: true })
       getFilmsFromApiWithSearchedText(this.searchedText, this.page + 1).then(data => {
@@ -73,26 +78,12 @@ class Search extends React.Component {
           onSubmitEditing={() => this._searchFilms()}
         />
         <Button title='Rechercher' onPress={() => this._searchFilms()} />
-        <FlatList
-          data={this.state.films}
-          extraData={this.props.favoritesFilm}
-
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) =>
-            <FilmItem
-              film={item}
-              isFilmFavorite={
-                this.props.favoritesFilm.findIndex(fav => fav.id === item.id) !== -1
-              }
-              displayDetailForFilm={this._displayDetailForFilm}
-            />}
-
-          onEndReachedThreshold={0.5}
-          onEndReached={() => {
-            if (this.page < this.totalPages) {
-              this._loadFilms()
-            }
-          }}
+        <FilmList
+          films={this.state.films}
+          navigation={this.props.navigation}
+          loadFilms={this._loadFilms}
+          page={this.page}
+          totalPages={this.totalPages}
         />
         {this._displayLoading()}
       </View>
