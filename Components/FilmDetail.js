@@ -19,6 +19,17 @@ class FilmDetail extends React.Component {
 
   componentDidMount() {
     //console.log(this.props)
+
+    const indexFavoriteFilm =
+      this.props.favoritesFilm.findIndex(item => item.idFilm === this.props.route.params.idFilm)
+
+    if (indexFavoriteFilm !== -1) {
+      this.setState({
+        film: this.props.favoritesFilm[indexFavoriteFilm]
+      })
+      return
+    }
+    this.setState({ isLoading: true })
     getFilmDetailFromApi(this.props.route.params.idFilm).then(data => {
       this.setState({
         film: data,
@@ -26,6 +37,7 @@ class FilmDetail extends React.Component {
       })
     })
   }
+
 
   componentDidUpdate() {
     //console.log("componentDidUpdate : ")

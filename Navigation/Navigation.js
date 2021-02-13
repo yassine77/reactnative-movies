@@ -28,6 +28,21 @@ function SearchStackNavigator() {
   );
 }
 
+function FavoritesStackNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Favorites"
+        component={Favorites}
+        options={{ title: 'Favoris' }}
+      />
+      <Stack.Screen name="FilmDetail"
+        component={FilmDetail}
+        options={{ title: 'Détails du film' }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function MoviesTabNavigator() {
   return (
     <NavigationContainer>
@@ -54,7 +69,7 @@ function MoviesTabNavigator() {
         }}
       >
         <Tab.Screen name="Search" component={SearchStackNavigator} />
-        <Tab.Screen name="Favorites" component={Favorites} />
+        <Tab.Screen name="Favorites" component={FavoritesStackNavigator} />
       </Tab.Navigator>
     </NavigationContainer>
   );
