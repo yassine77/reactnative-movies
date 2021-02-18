@@ -3,7 +3,7 @@
 import React from 'react'
 import Numeral from 'numeral'
 import Moment from 'moment'
-import { StyleSheet, View, Text, Image, ActivityIndicator, ScrollView, Button } from 'react-native'
+import { StyleSheet, View, Text, Image, ActivityIndicator, ScrollView, Button, Share } from 'react-native'
 import { getFilmDetailFromApi, getImageFromApi } from '../API/TMDBApi'
 import { connect } from 'react-redux'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -76,6 +76,26 @@ class FilmDetail extends React.Component {
     )
   }
 
+  _shareFilm() {
+    const { film } = this.state
+    Share.share({ title: film.title, message: film.overview })
+}
+
+  _displayFloatingActionButton() {
+    const { film } = this.state
+    if (film != undefined && Platform.OS === 'android') { // Uniquement sur Android et lorsque le film est chargé
+      console.log("_displayFloatingActionButton")
+      return (
+        <TouchableOpacity
+          onPress={() => this._shareFilm()}>
+          <Image
+            style={styles.share_image}
+            source={require('../Images/ic_share.png')} />
+        </TouchableOpacity>
+      )
+    }
+  }
+
   _displayFilm() {
     if (this.state.film != undefined) {
       return (
@@ -118,11 +138,15 @@ class FilmDetail extends React.Component {
   }
 
   render() {
-    //console.log(this.props)
     return (
       <View style={styles.main_container}>
-        {this._displayLoading()}
-        {this._displayFilm()}
+        <View style={styles.main_container}>
+          {this._displayLoading()}
+          {this._displayFilm()}
+        </View>
+        <View style={styles.share_touchable_floatingactionbutton}>
+          {this._displayFloatingActionButton()}
+        </View>
       </View>
     )
   }
@@ -181,6 +205,21 @@ const styles = StyleSheet.create({
     margin: 5,
     marginBottom: 15
   },
+  share_touchable_floatingactionbutton: {
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    right: 30,
+    bottom: 30,
+    borderRadius: 30,
+    backgroundColor: '#e91e63',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  share_image: {
+    width: 30,
+    height: 30
+  }
 })
 
 const mapStateToProps = (state) => {

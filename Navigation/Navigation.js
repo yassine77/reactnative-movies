@@ -8,6 +8,7 @@ import FilmDetail from '../Components/FilmDetail';
 import Favorites from '../Components/Favorites';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image, StyleSheet } from 'react-native';
+import Test from '../Components/Test';
 
 const Stack = createStackNavigator();
 
@@ -68,6 +69,7 @@ function MoviesTabNavigator() {
           showIcon: true // On informe le TabNavigator qu'on souhaite afficher les icônes définis
         }}
       >
+        <Tab.Screen name="Test" component={Test} />
         <Tab.Screen name="Search" component={SearchStackNavigator} />
         <Tab.Screen name="Favorites" component={FavoritesStackNavigator} />
       </Tab.Navigator>
