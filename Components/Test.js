@@ -1,18 +1,53 @@
 // Components/Test.js
 
 import React from 'react'
-import { Platform, StyleSheet, View } from 'react-native'
-import HelloWorld from './HelloWorld'
+import { StyleSheet, View, Animated, Easing } from 'react-native'
+
 
 class Test extends React.Component {
 
-    render() {
-        return (
-          <View style={styles.main_container}>
-            <HelloWorld/>
-          </View>
-        )
+  constructor(props) {
+    super(props)
+    this.state = {
+      topPosition: new Animated.Value(0)
     }
+  }
+
+  animate() {
+    Animated.sequence([
+      Animated.spring(
+        this.state.topPosition,
+        {
+          toValue: 100,
+          tension: 8,
+          friction: 3,
+          useNativeDriver: false
+        }
+      ),
+      Animated.timing(
+        this.state.topPosition,
+        {
+          toValue: 0,
+          duration: 1000,
+          easing: Easing.elastic(2),
+          useNativeDriver: false
+        }
+      )
+    ]).start()
+  }
+
+  componentDidMount() {
+    this.animate()
+  }
+
+  render() {
+    return (
+      <View style={styles.main_container}>
+        <Animated.View style={[styles.animation_view, { top: this.state.topPosition }]}>
+        </Animated.View>
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -21,20 +56,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  subview_container: {
-    ...Platform.select({
-      ios: {
-        backgroundColor: 'red',
-        height: 100,
-        width: 50
-      },
-      android: {
-        backgroundColor: 'green',
-        height: 50,
-        width: 100
-      }
-    })
-}
+  animation_view: {
+    backgroundColor: 'red',
+    width: 100,
+    height: 100
+  }
 })
 
 export default Test
