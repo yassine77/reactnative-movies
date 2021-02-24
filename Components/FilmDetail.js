@@ -7,6 +7,7 @@ import { StyleSheet, View, Text, Image, ActivityIndicator, ScrollView, Button, S
 import { getFilmDetailFromApi, getImageFromApi } from '../API/TMDBApi'
 import { connect } from 'react-redux'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import EnlargeShrink from '../Animations/EnLargeShrink'
 
 class FilmDetail extends React.Component {
   constructor(props) {
@@ -64,15 +65,19 @@ class FilmDetail extends React.Component {
 
   _displayFavoriteImage() {
     var sourceImage = require('../Images/ic_favorite_border.png')
+    var shouldEnlarge = false // Par défaut, si le film n'est pas en favoris, on veut qu'au clic sur le bouton, celui-ci s'agrandisse => shouldEnlarge à true
     if (this.props.favoritesFilm.findIndex(item => item.id === this.state.film.id) !== -1) {
-      // Film dans nos favoris
       sourceImage = require('../Images/ic_favorite.png')
+      shouldEnlarge = true // Si le film est dans les favoris, on veut qu'au clic sur le bouton, celui-ci se rétrécisse => shouldEnlarge à false
     }
     return (
-      <Image
-        style={styles.favorite_image}
-        source={sourceImage}
-      />
+      <EnlargeShrink
+        shouldEnlarge={shouldEnlarge}>
+        <Image
+          style={styles.favorite_image}
+          source={sourceImage}
+        />
+      </EnlargeShrink>
     )
   }
 
@@ -106,7 +111,7 @@ class FilmDetail extends React.Component {
             source={{ uri: getImageFromApi(this.state.film.backdrop_path) }}
           />
 
-          <Text style={styles.title_container}>
+          <Text style={styles.title_text}>
             {this.state.film.title}
           </Text>
 
@@ -156,13 +161,6 @@ const styles = StyleSheet.create({
   main_container: {
     flex: 1
   },
-  favorite_container: {
-    alignItems: 'center', // Alignement des components enfants sur l'axe secondaire, X ici
-  },
-  favorite_image: {
-    width: 40,
-    height: 40
-  },
   loading_container: {
     position: 'absolute',
     left: 0,
@@ -175,7 +173,11 @@ const styles = StyleSheet.create({
   scrollview_container: {
     flex: 1
   },
-  title_container: {
+  image: {
+    height: 169,
+    margin: 5
+  },
+  title_text: {
     fontWeight: 'bold',
     fontSize: 35,
     flex: 1,
@@ -187,23 +189,24 @@ const styles = StyleSheet.create({
     color: '#000000',
     textAlign: 'center'
   },
-  image: {
-    height: 180,
-    margin: 5,
-  },
-  vote_text: {
-    marginLeft: 5,
-    marginRight: 5,
-    marginTop: 5,
-  },
-  description_container: {
-    flex: 7
+  favorite_container: {
+    alignItems: 'center',
   },
   description_text: {
     fontStyle: 'italic',
     color: '#666666',
     margin: 5,
     marginBottom: 15
+  },
+  default_text: {
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 5,
+  },
+  favorite_image:{
+    flex: 1,
+    width: null,
+    height: null
   },
   share_touchable_floatingactionbutton: {
     position: 'absolute',
@@ -215,6 +218,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#e91e63',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  share_touchable_headerrightbutton: {
+    marginRight: 8
   },
   share_image: {
     width: 30,
